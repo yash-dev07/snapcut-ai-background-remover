@@ -6,7 +6,7 @@ You are a Senior Full-Stack Engineer, Product Architect, and UI/UX Designer. You
 
 
 Build this system for real-world commercial deployment with scalability, security, and monetization.
-
+csjkcsbc
 
 
 
