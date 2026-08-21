@@ -80,6 +80,78 @@ function extractUrlFromObject(obj: unknown): string | null {
   );
 }
 
+async function sendToWebhook(file: File): Promise<Blob> {
+  const arrayBuffer = await file.arrayBuffer();
+  const uint8 = new Uint8Array(arrayBuffer);
+
+  const webhookUrl = import.meta.env.VITE_N8N_WEBHOOK_URL || "";
+  if (!webhookUrl) {
+    throw new Error("Webhook URL is not configured.");
+  }
+
+  const response = await fetch(webhookUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": file.type,
+      "X-Filename": encodeURIComponent(file.name),
+      "X-File-Size": String(file.size),
+    },
+    body: uint8,
+  });
+
+  if (!response.ok) {
+    const errText = await response.text().catch(() => "");
+    throw new Error(
+      `Webhook responded with status ${response.status}${errText ? `: ${errText.slice(0, 200)}` : ""}`
+    );
+  }
+
+  const text = await response.text();
+  let resultBlob: Blob;
+  let parsedJson: unknown = null;
+  let isJson = false;
+
+  try {
+    parsedJson = JSON.parse(text);
+    isJson = true;
+  } catch {
+    isJson = false;
+  }
+
+  if (isJson && parsedJson) {
+    const extractedUrl = extractUrlFromObject(parsedJson);
+    if (extractedUrl) {
+      const img = await fetch(extractedUrl);
+      if (!img.ok) throw new Error(`Failed to download result from URL (status ${img.status}).`);
+      resultBlob = await img.blob();
+    } else {
+      throw new Error(
+        `Webhook returned JSON but no 'url' field was found. Expected: { "url": "https://..." }. Received keys: ${Object.keys(
+          (parsedJson as object) || {}
+        ).join(", ") || "(none)"}`
+      );
+    }
+  } else {
+    if (text && text.length > 0) {
+      const rawBlob = new Blob([text]);
+      if (rawBlob.size > 100) {
+        resultBlob = rawBlob;
+      } else {
+        throw new Error(
+          `Webhook returned non-JSON response of ${text.length} chars. Expected JSON: { "url": "https://..." }`
+        );
+      }
+    } else {
+      resultBlob = await response.blob();
+    }
+  }
+
+  if (resultBlob.size === 0) {
+    throw new Error("Webhook returned an empty response.");
+  }
+  return resultBlob;
+}
+
 function WorkspacePage() {
   const { data: account } = useAccount();
   const queryClient = useQueryClient();
@@ -146,6 +218,7 @@ function WorkspacePage() {
       });
       uploadId = job.uploadId;
 
+      // Imports dynamically from src/lib/remove-bg.client.ts
       const mod = await import("@/lib/remove-bg.client");
       const { blob, source } = (await mod.removeBackgroundSmart(
         selectedFile,
