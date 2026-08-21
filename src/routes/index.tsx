@@ -159,7 +159,7 @@ function BackgroundRemover() {
     setResultUrl(null);
     const startedAt = performance.now();
     try {
-      const mod = await import("@/lib/remove-bg.client");
+      const mod = await loadRemoveBg();
       const { blob, source } = (await mod.removeBackgroundSmart(
         selectedFile,
         webhookRemove as RemoveBgServerFn,
