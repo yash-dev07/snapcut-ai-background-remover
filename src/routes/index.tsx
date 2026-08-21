@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useServerFn } from "@tanstack/react-start";
+import { createClientOnlyFn, useServerFn } from "@tanstack/react-start";
 import {
   ArrowRight,
   Check,
@@ -121,6 +121,7 @@ function BackgroundRemover() {
   const [dragOver, setDragOver] = useState(false);
 
   const webhookRemove = useServerFn(removeBackgroundViaWebhook);
+  const loadRemoveBg = createClientOnlyFn(async () => import("@/lib/remove-bg.client"));
 
   const clearSelection = useCallback(() => {
     if (originalUrl) URL.revokeObjectURL(originalUrl);

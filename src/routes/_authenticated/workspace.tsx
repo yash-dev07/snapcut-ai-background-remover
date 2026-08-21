@@ -7,6 +7,7 @@ import { UploadCloud, Download, Loader2, Upload, Clipboard, Cpu } from "lucide-r
 import { AppLayout } from "@/components/app/AppLayout";
 import { useAccount } from "@/hooks/useAccount";
 import { supabase } from "@/integrations/supabase/client";
+import { createClientOnlyFn } from "@tanstack/react-start";
 import {
   startRemovalJob,
   completeRemovalJob,
@@ -219,8 +220,8 @@ function WorkspacePage() {
       uploadId = job.uploadId;
 
       // Imports dynamically from src/lib/remove-bg.client.ts
-      const mod = await import("../../lib/remove-bg.client");
-      const { blob, source } = (await mod.removeBackgroundSmart(
+      const loadRemoveBg = createClientOnlyFn(async () => import("@/lib/remove-bg.client"));
+      const { blob, source } = (await loadRemoveBg().removeBackgroundSmart(
         selectedFile,
         webhookRemove as RemoveBgServerFn,
         {
