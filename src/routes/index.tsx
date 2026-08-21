@@ -122,6 +122,14 @@ function BackgroundRemover() {
 
   const webhookRemove = useServerFn(removeBackgroundViaWebhook);
 
+  const clearSelection = useCallback(() => {
+    if (originalUrl) URL.revokeObjectURL(originalUrl);
+    if (resultUrl) URL.revokeObjectURL(resultUrl);
+    setSelectedFile(null);
+    setOriginalUrl(null);
+    setResultUrl(null);
+  }, [originalUrl, resultUrl]);
+
   const selectFile = useCallback((file: File) => {
     if (!ACCEPTED.includes(file.type as (typeof ACCEPTED)[number])) {
       return toast.error("Only JPG, PNG and WebP images are supported.");
@@ -151,7 +159,7 @@ function BackgroundRemover() {
     setResultUrl(null);
     const startedAt = performance.now();
     try {
-      const mod = await import("../lib/remove-bg.client");
+      const mod = await import("@/lib/remove-bg.client");
       const { blob, source } = (await mod.removeBackgroundSmart(
         selectedFile,
         webhookRemove as RemoveBgServerFn,
@@ -288,15 +296,7 @@ function BackgroundRemover() {
               <CardHeader className="flex flex-row items-center justify-between space-y-0">
                 <CardTitle className="text-base">Original</CardTitle>
                 {originalUrl && !busy && (
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => {
-                      setSelectedFile(null);
-                      setOriginalUrl(null);
-                      setResultUrl(null);
-                    }}
-                  >
+                  <Button size="sm" variant="outline" onClick={clearSelection}>
                     Change
                   </Button>
                 )}
