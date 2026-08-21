@@ -3,11 +3,43 @@ import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 const FREE_DAILY_LIMIT = 5;
+const N8N_WEBHOOK_URL = "https://yashh7hh.app.n8n.cloud/webhook/remove_background";
+
+function cleanUrl(raw: unknown): string | null {
+  if (typeof raw !== "string") return null;
+  const cleaned = raw
+    .trim()
+    .replace(/^`+|`+$/g, "")
+    .trim();
+  if (!cleaned) return null;
+  return cleaned;
+}
+
+function extractUrlFromObject(obj: unknown): string | null {
+  if (!obj || typeof obj !== "object") return null;
+  const o = obj as Record<string, unknown>;
+  return (
+    cleanUrl(o.url) ||
+    cleanUrl(o.resultUrl) ||
+    cleanUrl(o.result_url) ||
+    cleanUrl(o.outputUrl) ||
+    cleanUrl(o.output_url) ||
+    cleanUrl(o.imageUrl) ||
+    cleanUrl(o.image_url) ||
+    (o.data && typeof o.data === "object" ? extractUrlFromObject(o.data) : null) ||
+    (o.result && typeof o.result === "object" ? extractUrlFromObject(o.result) : null) ||
+    (o.body && typeof o.body === "object" ? extractUrlFromObject(o.body) : null)
+  );
+}
 
 const startInput = z.object({
   originalName: z.string().trim().min(1).max(255),
   mimeType: z.enum(["image/jpeg", "image/png", "image/webp"]),
-  sizeBytes: z.number().int().positive().max(10 * 1024 * 1024),
+  sizeBytes: z
+    .number()
+    .int()
+    .positive()
+    .max(10 * 1024 * 1024),
   width: z.number().int().positive().max(5000),
   height: z.number().int().positive().max(5000),
 });
@@ -157,4 +189,97 @@ export const failRemovalJob = createServerFn({ method: "POST" })
       .eq("user_id", userId);
     if (error) throw error;
     return { ok: true };
+  });
+
+const webhookInput = z.object({
+  originalName: z.string().trim().min(1).max(255),
+  mimeType: z.enum(["image/jpeg", "image/png", "image/webp"]),
+  sizeBytes: z
+    .number()
+    .int()
+    .positive()
+    .max(10 * 1024 * 1024),
+  imageBase64: z.string().trim().min(1),
+});
+
+export const removeBackgroundViaWebhook = createServerFn({ method: "POST" })
+  .inputValidator((data) => webhookInput.parse(data))
+  .handler(async ({ data }) => {
+    const arrayBuffer = Uint8Array.from(atob(data.imageBase64), (c) => c.charCodeAt(0)).buffer;
+    const uint8 = new Uint8Array(arrayBuffer);
+
+    const webhookResponse = await fetch(N8N_WEBHOOK_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": data.mimeType,
+        "X-Filename": encodeURIComponent(data.originalName),
+        "X-File-Size": String(data.sizeBytes),
+      },
+      body: uint8,
+    });
+
+    if (!webhookResponse.ok) {
+      const errText = await webhookResponse.text().catch(() => "");
+      throw new Error(
+        `Webhook responded with status ${webhookResponse.status}${
+          errText ? `: ${errText.slice(0, 200)}` : ""
+        }`,
+      );
+    }
+
+    const text = await webhookResponse.text();
+    let resultBlob: Blob;
+    let parsedJson: unknown = null;
+    let isJson = false;
+
+    try {
+      parsedJson = JSON.parse(text);
+      isJson = true;
+    } catch {
+      isJson = false;
+    }
+
+    if (isJson && parsedJson) {
+      const extractedUrl = extractUrlFromObject(parsedJson);
+      if (extractedUrl) {
+        const img = await fetch(extractedUrl);
+        if (!img.ok) throw new Error(`Failed to download result from URL (status ${img.status}).`);
+        resultBlob = await img.blob();
+      } else {
+        throw new Error(
+          `Webhook returned JSON but no 'url' field was found. Expected: { "url": "https://..." }. Received keys: ${
+            Object.keys((parsedJson as object) || {}).join(", ") || "(none)"
+          }`,
+        );
+      }
+    } else {
+      if (text && text.length > 0) {
+        const rawBlob = new Blob([text]);
+        if (rawBlob.size > 100) {
+          resultBlob = rawBlob;
+        } else {
+          throw new Error(
+            `Webhook returned non-JSON response of ${text.length} chars. Expected JSON: { "url": "https://..." }`,
+          );
+        }
+      } else {
+        resultBlob = await webhookResponse.blob();
+      }
+    }
+
+    if (resultBlob.size === 0) {
+      throw new Error("Webhook returned an empty response.");
+    }
+
+    const resultBuffer = await resultBlob.arrayBuffer();
+    const resultUint8 = new Uint8Array(resultBuffer);
+    let binary = "";
+    const chunkSize = 0x8000;
+    for (let i = 0; i < resultUint8.length; i += chunkSize) {
+      const chunk = resultUint8.subarray(i, i + chunkSize);
+      binary += String.fromCharCode.apply(null, Array.from(chunk));
+    }
+    const resultBase64 = btoa(binary);
+
+    return { resultBase64, resultMimeType: resultBlob.type || "image/png" };
   });

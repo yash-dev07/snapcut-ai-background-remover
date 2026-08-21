@@ -18,7 +18,10 @@ export const Route = createFileRoute("/_authenticated/api-keys")({
       { title: "API keys — SnapCut AI" },
       { name: "description", content: "Create, inspect and revoke SnapCut AI developer API keys." },
       { property: "og:title", content: "API keys — SnapCut AI" },
-      { property: "og:description", content: "Manage developer credentials for the SnapCut AI REST API." },
+      {
+        property: "og:description",
+        content: "Manage developer credentials for the SnapCut AI REST API.",
+      },
     ],
   }),
   component: ApiKeysPage,
@@ -61,7 +64,8 @@ function ApiKeysPage() {
       <div className="mb-6">
         <h1 className="text-2xl font-semibold tracking-tight">API keys</h1>
         <p className="text-sm text-muted-foreground">
-          Authenticate REST requests with <code className="text-foreground">Authorization: Bearer &lt;key&gt;</code>.
+          Authenticate REST requests with{" "}
+          <code className="text-foreground">Authorization: Bearer &lt;key&gt;</code>.
         </p>
       </div>
 
@@ -122,7 +126,9 @@ function ApiKeysPage() {
                   <p className="text-sm font-medium">{key.name}</p>
                   <p className="text-xs text-muted-foreground">
                     {key.key_prefix}… · created {new Date(key.created_at).toLocaleDateString()} ·{" "}
-                    {key.last_used_at ? `last used ${new Date(key.last_used_at).toLocaleString()}` : "never used"}
+                    {key.last_used_at
+                      ? `last used ${new Date(key.last_used_at).toLocaleString()}`
+                      : "never used"}
                   </p>
                 </div>
                 <div className="flex items-center gap-2">

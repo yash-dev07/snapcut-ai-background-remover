@@ -23,7 +23,10 @@ export const Route = createFileRoute("/api/public/v1/account")({
         const auth = request.headers.get("authorization") ?? "";
         const token = auth.startsWith("Bearer ") ? auth.slice(7).trim() : "";
         if (!token.startsWith("sk_snap_")) {
-          return json({ error: "unauthorized", message: "Provide a SnapCut API key as a Bearer token." }, 401);
+          return json(
+            { error: "unauthorized", message: "Provide a SnapCut API key as a Bearer token." },
+            401,
+          );
         }
 
         const { createHash } = await import("node:crypto");
@@ -37,7 +40,8 @@ export const Route = createFileRoute("/api/public/v1/account")({
           .maybeSingle();
 
         if (error) return json({ error: "server_error" }, 500);
-        if (!key || key.revoked_at) return json({ error: "unauthorized", message: "Invalid or revoked key." }, 401);
+        if (!key || key.revoked_at)
+          return json({ error: "unauthorized", message: "Invalid or revoked key." }, 401);
 
         await supabaseAdmin
           .from("api_keys")
@@ -46,7 +50,11 @@ export const Route = createFileRoute("/api/public/v1/account")({
 
         const today = new Date().toISOString().slice(0, 10);
         const [profileRes, creditsRes, countRes] = await Promise.all([
-          supabaseAdmin.from("profiles").select("plan, daily_used, daily_reset_on").eq("id", key.user_id).maybeSingle(),
+          supabaseAdmin
+            .from("profiles")
+            .select("plan, daily_used, daily_reset_on")
+            .eq("id", key.user_id)
+            .maybeSingle(),
           supabaseAdmin.from("credits").select("balance").eq("user_id", key.user_id).maybeSingle(),
           supabaseAdmin
             .from("uploads")

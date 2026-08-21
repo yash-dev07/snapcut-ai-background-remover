@@ -10,7 +10,10 @@ export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
     meta: [
       { title: "Admin panel — SnapCut AI" },
-      { name: "description", content: "Monitor SnapCut AI users, processing jobs, revenue and system logs." },
+      {
+        name: "description",
+        content: "Monitor SnapCut AI users, processing jobs, revenue and system logs.",
+      },
       { property: "og:title", content: "Admin panel — SnapCut AI" },
       { property: "og:description", content: "Operational overview of the SnapCut AI platform." },
     ],
@@ -102,7 +105,9 @@ function AdminPage() {
                       {new Date(upload.created_at).toLocaleString()}
                     </p>
                   </div>
-                  <Badge variant={upload.status === "succeeded" ? "default" : "secondary"}>{upload.status}</Badge>
+                  <Badge variant={upload.status === "succeeded" ? "default" : "secondary"}>
+                    {upload.status}
+                  </Badge>
                 </li>
               ))}
             </ul>

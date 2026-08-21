@@ -10,7 +10,10 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
     meta: [
       { title: "Dashboard — SnapCut AI" },
-      { name: "description", content: "Track your SnapCut AI usage, credits and recent background removals." },
+      {
+        name: "description",
+        content: "Track your SnapCut AI usage, credits and recent background removals.",
+      },
       { property: "og:title", content: "Dashboard — SnapCut AI" },
       { property: "og:description", content: "Usage, credits and recent cutouts in one place." },
     ],
@@ -34,7 +37,11 @@ function DashboardPage() {
     },
     {
       label: "Free removals left today",
-      value: data ? (data.plan === "pro" ? "Unlimited" : String(Math.max(0, data.dailyLimit - data.dailyUsed))) : "—",
+      value: data
+        ? data.plan === "pro"
+          ? "Unlimited"
+          : String(Math.max(0, data.dailyLimit - data.dailyUsed))
+        : "—",
       icon: Clock,
     },
     {
@@ -51,7 +58,9 @@ function DashboardPage() {
           <h1 className="text-2xl font-semibold tracking-tight">
             Welcome back{data?.profile?.full_name ? `, ${data.profile.full_name}` : ""}
           </h1>
-          <p className="text-sm text-muted-foreground">Your background removal activity at a glance.</p>
+          <p className="text-sm text-muted-foreground">
+            Your background removal activity at a glance.
+          </p>
         </div>
         <Button variant="hero" asChild>
           <Link to="/workspace">New cutout</Link>
@@ -94,7 +103,9 @@ function DashboardPage() {
                     {upload.credits_used > 0 ? " · 1 credit" : " · free quota"}
                   </p>
                 </div>
-                <Badge variant={upload.status === "succeeded" ? "default" : "secondary"}>{upload.status}</Badge>
+                <Badge variant={upload.status === "succeeded" ? "default" : "secondary"}>
+                  {upload.status}
+                </Badge>
               </li>
             ))}
           </ul>

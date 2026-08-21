@@ -20,7 +20,10 @@ export const Route = createFileRoute("/auth")({
           "Sign in to SnapCut AI or create a free account to remove image backgrounds instantly, track credits and manage API keys.",
       },
       { property: "og:title", content: "Sign in — SnapCut AI" },
-      { property: "og:description", content: "Access your SnapCut AI workspace, credits and API keys." },
+      {
+        property: "og:description",
+        content: "Access your SnapCut AI workspace, credits and API keys.",
+      },
     ],
   }),
   component: AuthPage,

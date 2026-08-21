@@ -10,18 +10,39 @@ export const Route = createFileRoute("/_authenticated/billing")({
   head: () => ({
     meta: [
       { title: "Billing & credits — SnapCut AI" },
-      { name: "description", content: "Review your SnapCut AI plan, credit balance and payment history." },
+      {
+        name: "description",
+        content: "Review your SnapCut AI plan, credit balance and payment history.",
+      },
       { property: "og:title", content: "Billing & credits — SnapCut AI" },
-      { property: "og:description", content: "Plan, credits and payment history for your SnapCut AI account." },
+      {
+        property: "og:description",
+        content: "Plan, credits and payment history for your SnapCut AI account.",
+      },
     ],
   }),
   component: BillingPage,
 });
 
 const plans = [
-  { id: "free", name: "Free", price: "₹0", perks: ["5 removals / day", "Standard quality", "24h auto-delete"] },
-  { id: "pro", name: "Pro", price: "₹499 / mo", perks: ["Unlimited removals", "HD matting", "Priority queue", "API access"] },
-  { id: "credits", name: "Credit pack", price: "₹299", perks: ["500 credits", "Never expire", "Use beyond daily limit"] },
+  {
+    id: "free",
+    name: "Free",
+    price: "₹0",
+    perks: ["5 removals / day", "Standard quality", "24h auto-delete"],
+  },
+  {
+    id: "pro",
+    name: "Pro",
+    price: "₹499 / mo",
+    perks: ["Unlimited removals", "HD matting", "Priority queue", "API access"],
+  },
+  {
+    id: "credits",
+    name: "Credit pack",
+    price: "₹299",
+    perks: ["500 credits", "Never expire", "Use beyond daily limit"],
+  },
 ];
 
 function BillingPage() {
@@ -70,8 +91,8 @@ function BillingPage() {
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground">
-            No payments yet. Paid checkout activates once Razorpay API keys are connected to this project — ask me to
-            wire it up and I&apos;ll request the keys securely.
+            No payments yet. Paid checkout activates once Razorpay API keys are connected to this
+            project — ask me to wire it up and I&apos;ll request the keys securely.
           </p>
         </CardContent>
       </Card>

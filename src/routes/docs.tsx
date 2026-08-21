@@ -73,9 +73,9 @@ function Docs() {
 
           <h2 className="mt-14 font-display text-2xl font-semibold">Authentication</h2>
           <p className="mt-3 text-sm text-muted-foreground">
-            Every request needs an <code className="text-foreground">Authorization</code> header with
-            a key generated from your dashboard. Keys are scoped per environment and can be rotated
-            at any time.
+            Every request needs an <code className="text-foreground">Authorization</code> header
+            with a key generated from your dashboard. Keys are scoped per environment and can be
+            rotated at any time.
           </p>
 
           <h2 className="mt-12 font-display text-2xl font-semibold">Remove a background</h2>

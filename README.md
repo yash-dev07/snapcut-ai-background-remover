@@ -2,22 +2,19 @@
 
 You are a Senior Full-Stack Engineer, Product Architect, and UI/UX Designer. Your task is to design and generate a complete, production-ready SaaS web application called “SnapCut AI”, an AI-powered background removal platform.
 
-
-
-
 Build this system for real-world commercial deployment with scalability, security, and monetization.
+<<<<<<< HEAD
 csjkcsbc
 
+=======
 
+> > > > > > > bc968f7 (n8n backend integration)
 
 ==================================================
 
 ROLE DEFINITION
 
 ==================================================
-
-
-
 
 Act as:
 
@@ -31,22 +28,13 @@ Act as:
 
 - Automation & Integration Specialist
 
-
-
-
 You must produce clean, maintainable, fully deployable code.
-
-
-
 
 ==================================================
 
 SYSTEM CONSTRAINTS
 
 ==================================================
-
-
-
 
 Frontend:
 
@@ -58,45 +46,27 @@ Frontend:
 
 - ShadCN UI
 
-
-
-
 Backend / Automation:
 
 - n8n Cloud (no custom backend server)
 
 - Webhook-based workflows
 
-
-
-
 Database & Auth:
 
 - Supabase (PostgreSQL + Auth)
-
-
-
 
 Storage:
 
 - Cloudinary (temporary storage only)
 
-
-
-
 AI Processing:
 
 - Third-party background removal API (Remove.bg / ClipDrop / Photoroom)
 
-
-
-
 Payments:
 
 - Razorpay (Orders API + Checkout + Webhooks)
-
-
-
 
 Hosting:
 
@@ -105,9 +75,6 @@ Hosting:
 - Backend: n8n Cloud
 
 - Database: Supabase Cloud
-
-
-
 
 Limits:
 
@@ -119,22 +86,13 @@ Limits:
 
 - Auto-delete after 24 hours
 
-
-
-
 No permanent file storage.
-
-
-
 
 ==================================================
 
 FUNCTIONAL REQUIREMENTS
 
 ==================================================
-
-
-
 
 AUTHENTICATION
 
@@ -147,9 +105,6 @@ AUTHENTICATION
 - Email verification
 
 - JWT sessions via Supabase
-
-
-
 
 IMAGE PROCESSING FLOW
 
@@ -175,9 +130,6 @@ IMAGE PROCESSING FLOW
 
 11. Enable download
 
-
-
-
 USER DASHBOARD
 
 - Upload history (7 days)
@@ -189,9 +141,6 @@ USER DASHBOARD
 - Subscription status
 
 - Download history
-
-
-
 
 PAYMENTS & CREDITS
 
@@ -205,9 +154,6 @@ PAYMENTS & CREDITS
 
 - Razorpay Webhooks → n8n → Supabase update
 
-
-
-
 ADMIN PANEL
 
 - User management
@@ -220,9 +166,6 @@ ADMIN PANEL
 
 - API monitoring
 
-
-
-
 PUBLIC API (B2B)
 
 - API keys
@@ -233,17 +176,11 @@ PUBLIC API (B2B)
 
 - Documentation page
 
-
-
-
 ==================================================
 
 NON-FUNCTIONAL REQUIREMENTS
 
 ==================================================
-
-
-
 
 - Avg processing time < 5s
 
@@ -267,17 +204,11 @@ NON-FUNCTIONAL REQUIREMENTS
 
 - Retry mechanisms
 
-
-
-
 ==================================================
 
 PAGE STRUCTURE
 
 ==================================================
-
-
-
 
 PUBLIC
 
@@ -299,9 +230,6 @@ PUBLIC
 
 - Terms
 
-
-
-
 AUTH
 
 - Login
@@ -311,9 +239,6 @@ AUTH
 - Forgot Password
 
 - Verify Email
-
-
-
 
 USER
 
@@ -333,9 +258,6 @@ USER
 
 - API Keys
 
-
-
-
 ADMIN
 
 - Admin Dashboard
@@ -348,22 +270,13 @@ ADMIN
 
 - Payments
 
-
-
-
 ==================================================
 
 UI / UX DESIGN SYSTEM
 
 ==================================================
 
-
-
-
 Theme: Dark Neon AI (Based on Logo)
-
-
-
 
 Primary:   #0EA5FF
 
@@ -380,9 +293,6 @@ Text:      #E5E7EB
 Muted:     #94A3B8
 
 Error:     #F87171
-
-
-
 
 Design Rules:
 
@@ -408,15 +318,9 @@ Design Rules:
 
 - Hover neon effects
 
-
-
-
 Typography:
 
 - Inter / Poppins
-
-
-
 
 Layout:
 
@@ -428,17 +332,11 @@ Layout:
 
 - High contrast
 
-
-
-
 ==================================================
 
 TECHNICAL STACK
 
 ==================================================
-
-
-
 
 Frontend:
 
@@ -460,9 +358,6 @@ Frontend:
 
 - Zod
 
-
-
-
 Backend:
 
 - n8n Cloud
@@ -473,9 +368,6 @@ Backend:
 
 - Razorpay SDK
 
-
-
-
 Monitoring:
 
 - Supabase Logs
@@ -484,17 +376,11 @@ Monitoring:
 
 - Vercel Analytics
 
-
-
-
 ==================================================
 
 INTEGRATION LOGIC
 
 ==================================================
-
-
-
 
 N8N WORKFLOW
 
@@ -514,9 +400,6 @@ N8N WORKFLOW
 
 8. Return URL
 
-
-
-
 DATABASE TABLES
 
 - users
@@ -533,9 +416,6 @@ DATABASE TABLES
 
 - logs
 
-
-
-
 RAZORPAY
 
 - Create Order via n8n
@@ -545,9 +425,6 @@ RAZORPAY
 - Webhook Listener
 
 - Update credits/subscription
-
-
-
 
 SECURITY
 
@@ -559,22 +436,13 @@ SECURITY
 
 - Audit logging
 
-
-
-
 ==================================================
 
 OUTPUT EXPECTATIONS
 
 ==================================================
 
-
-
-
 Generate:
-
-
-
 
 - Complete React + Vite codebase
 
@@ -602,9 +470,6 @@ Generate:
 
 - API examples
 
-
-
-
 Code Quality:
 
 - SOLID principles
@@ -619,22 +484,13 @@ Code Quality:
 
 - No placeholders
 
-
-
-
 ==================================================
 
 RESTRICTIONS
 
 ==================================================
 
-
-
-
 DO NOT:
-
-
-
 
 - Build photo editors
 
@@ -654,13 +510,7 @@ DO NOT:
 
 - Implement custom backend servers
 
-
-
-
 Focus only on background removal SaaS.
-
-
-
 
 ==================================================
 
@@ -668,19 +518,9 @@ PROJECT GOAL
 
 ==================================================
 
-
-
-
 Deliver a scalable, monetizable, production-ready AI background removal platform optimized for speed, simplicity, branding consistency, and commercial deployment.
 
-
-
-
 The final output must be immediately deployable.
-
-
-
-
 
 use the attached image as the logo and for website color theme identification
 

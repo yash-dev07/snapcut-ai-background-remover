@@ -88,7 +88,8 @@
   --neon-purple: oklch(0.75 0.15 305);
 
   --gradient-cta: linear-gradient(100deg, var(--neon-blue), var(--neon-purple));
-  --gradient-hero: radial-gradient(
+  --gradient-hero:
+    radial-gradient(
       60% 50% at 20% 0%,
       color-mix(in oklab, var(--neon-blue) 22%, transparent),
       transparent 70%
@@ -98,7 +99,8 @@
       color-mix(in oklab, var(--neon-purple) 20%, transparent),
       transparent 70%
     );
-  --glow-primary: 0 0 0 1px color-mix(in oklab, var(--neon-blue) 35%, transparent),
+  --glow-primary:
+    0 0 0 1px color-mix(in oklab, var(--neon-blue) 35%, transparent),
     0 12px 40px -12px color-mix(in oklab, var(--neon-blue) 65%, transparent);
   --glow-accent: 0 12px 40px -14px color-mix(in oklab, var(--neon-purple) 70%, transparent);
 
