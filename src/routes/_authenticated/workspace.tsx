@@ -219,7 +219,7 @@ function WorkspacePage() {
       uploadId = job.uploadId;
 
       // Imports dynamically from src/lib/remove-bg.client.ts
-      const mod = await import("@/lib/remove-bg.client");
+      const mod = await import("../../lib/remove-bg.client");
       const { blob, source } = (await mod.removeBackgroundSmart(
         selectedFile,
         webhookRemove as RemoveBgServerFn,
